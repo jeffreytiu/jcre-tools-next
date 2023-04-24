@@ -1,7 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
+import SoldReportList from '../components/SoldReportList';
+import BuyerReportList from '../components/BuyerReportList';
+import TotalReportList from '../components/TotalReportList';
 
 export default function InternalReport() {
   const [listData, setListData] = useState(null);
+  const soldReportRef = useRef(null);
+  const buyerReportRef = useRef(null);
+  const totalReportRef = useRef(null);
 
   const handleFileUpload = (event) => {
     const file = event.target.files?.[0];
@@ -17,25 +23,17 @@ export default function InternalReport() {
     reader.readAsText(file);
   };
 
-  // filter the data and create a list of sold properties
-  const soldReportList = listData
-    ?.filter((item) => item['List Agent Mls Id'] === 'CCHANJE1')
-    .map((item) => {
-      const closePrice = parseFloat(
-        item['Close Price'].replace(/[^\d.-]/g, '')
-      );
-      const listPrice = parseFloat(item['List Price'].replace(/[^\d.-]/g, ''));
-      const percentage = ((closePrice / listPrice) * 100).toFixed(1) + '%';
-      return (
-        <tr key={item.ID}>
-          <td>{item.Address}</td>
-          <td>{item['List Price']}</td>
-          <td>{item['Close Price']}</td>
-          <td>{percentage || 0}</td>
-          <td>{item.DOM}</td>
-        </tr>
-      );
-    });
+  const handlePrintSoldReport = () => {
+    window.print();
+  };
+
+  const handlePrintBuyerReport = () => {
+    window.print();
+  };
+
+  const handlePrintTotalReport = () => {
+    window.print();
+  };
 
   return (
     <main className={`container mx-auto p-4`}>
@@ -53,20 +51,21 @@ export default function InternalReport() {
       </div>
       <br />
       {listData && (
-        <div>
-          <h2>HOME Sold to Buyer ({soldReportList.length})</h2>
-          <table>
-            <thead>
-              <tr>
-                <th>Address</th>
-                <th>List Price</th>
-                <th>Close Price</th>
-                <th>Percentage</th>
-                <th>DOM</th>
-              </tr>
-            </thead>
-            <tbody>{soldReportList}</tbody>
-          </table>
+        <div ref={soldReportRef}>
+          <SoldReportList data={listData} />
+          <button onClick={handlePrintSoldReport}>Print Sold Report</button>
+        </div>
+      )}
+      {listData && (
+        <div ref={buyerReportRef}>
+          <BuyerReportList data={listData} />
+          <button onClick={handlePrintBuyerReport}>Print Buyer Report</button>
+        </div>
+      )}
+      {listData && (
+        <div ref={totalReportRef}>
+          <TotalReportList data={listData} />
+          <button onClick={handlePrintTotalReport}>Print Total Report</button>
         </div>
       )}
     </main>

@@ -1,13 +1,11 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import SoldReportList from '../components/SoldReportList';
 import BuyerReportList from '../components/BuyerReportList';
 import TotalReportList from '../components/TotalReportList';
+import PrintComponent from '../components/PrintComponent';
 
 export default function InternalReport() {
   const [listData, setListData] = useState(null);
-  const soldReportRef = useRef(null);
-  const buyerReportRef = useRef(null);
-  const totalReportRef = useRef(null);
 
   const handleFileUpload = (event) => {
     const file = event.target.files?.[0];
@@ -23,21 +21,9 @@ export default function InternalReport() {
     reader.readAsText(file);
   };
 
-  const handlePrintSoldReport = () => {
-    window.print();
-  };
-
-  const handlePrintBuyerReport = () => {
-    window.print();
-  };
-
-  const handlePrintTotalReport = () => {
-    window.print();
-  };
-
   return (
     <main className={`container mx-auto p-4`}>
-      <h1>Internal Report</h1>
+      <h1 className="text-3xl font-bold">Internal Report</h1>
       <br />
       <div className="">
         <label htmlFor="data-list-upload">Please upload MLS data list</label>
@@ -51,22 +37,21 @@ export default function InternalReport() {
       </div>
       <br />
       {listData && (
-        <div ref={soldReportRef}>
-          <SoldReportList data={listData} />
-          <button onClick={handlePrintSoldReport}>Print Sold Report</button>
+        <div className="mb-10">
+          <PrintComponent title="Sold Report">
+            <SoldReportList data={listData} />
+          </PrintComponent>
         </div>
       )}
       {listData && (
-        <div ref={buyerReportRef}>
+        <PrintComponent title="Buyer Report">
           <BuyerReportList data={listData} />
-          <button onClick={handlePrintBuyerReport}>Print Buyer Report</button>
-        </div>
+        </PrintComponent>
       )}
       {listData && (
-        <div ref={totalReportRef}>
+        <PrintComponent title="Total Report">
           <TotalReportList data={listData} />
-          <button onClick={handlePrintTotalReport}>Print Total Report</button>
-        </div>
+        </PrintComponent>
       )}
     </main>
   );

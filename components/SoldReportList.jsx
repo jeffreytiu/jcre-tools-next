@@ -1,4 +1,5 @@
 import React from 'react';
+import CloseDateYearChecker from './CloseDateYearChecker';
 
 export default function SoldReportList({ data }) {
   const filteredData = data?.filter(
@@ -11,27 +12,37 @@ export default function SoldReportList({ data }) {
     const percentage = ((closePrice / listPrice) * 100).toFixed(1) + '%';
 
     return (
-      <tr key={item.ID}>
-        <td>{item.Address}</td>
-        <td>{item['List Price']}</td>
-        <td>{item['Close Price']}</td>
-        <td>{percentage || 0}</td>
-        <td>{item.DOM}</td>
+      <tr key={item.ID} className="even:bg-reportGreen odd:bg-white">
+        <td className="border-r border-r-slate-300">{item.Address}</td>
+        <td className="border-r border-r-slate-300 text-center">
+          {item['List Price']}
+        </td>
+        <td className="border-r border-r-slate-300 text-center">
+          {item['Close Price']}
+        </td>
+        <td className="border-r border-r-slate-300 text-center">
+          {percentage || 0}
+        </td>
+        <td className="text-center">{item.DOM}</td>
       </tr>
     );
   });
 
   return (
     <>
-      <h2>Listings SOLD ({listItems.length})</h2>
-      <table>
+      <h2 className="text-3xl text-titleGreen">
+        Listings <span className="text-titleBlue">SOLD</span> (
+        {listItems.length}) <CloseDateYearChecker data={data} />
+      </h2>
+      <p>Jessica Chan & Associates</p>
+      <table className="mb-4 mt-8 w-full max-w-screen-xl" cellPadding={6}>
         <thead>
-          <tr>
-            <th>Address</th>
-            <th>List Price</th>
-            <th>Close Price</th>
-            <th>Percentage</th>
-            <th>DOM</th>
+          <tr className="border-t-2 border-b-2 border-t-titleGreen border-b-slate-400">
+            <th className="w-4/12 border-r border-r-slate-300">Address</th>
+            <th className="w-2/12 border-r border-r-slate-300">List Price</th>
+            <th className="w-2/12 border-r border-r-slate-300">Close Price</th>
+            <th className="w-2/12 border-r border-r-slate-300">Percentage</th>
+            <th className="w-2/12">DOM</th>
           </tr>
         </thead>
         <tbody>{listItems}</tbody>

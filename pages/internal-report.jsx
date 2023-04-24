@@ -37,11 +37,9 @@ export default function InternalReport() {
       </div>
       <br />
       {listData && (
-        <div className="mb-10">
-          <PrintComponent title="Sold Report">
-            <SoldReportList data={listData} />
-          </PrintComponent>
-        </div>
+        <PrintComponent title="Sold Report">
+          <SoldReportList data={listData} />
+        </PrintComponent>
       )}
       {listData && (
         <PrintComponent title="Buyer Report">

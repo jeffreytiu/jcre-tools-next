@@ -35,20 +35,20 @@ export default function TotalReportList({ data }) {
   });
 
   useEffect(() => {
-    let total = 0;
-    Object.values(countBySubdivision).forEach(({ total: count }) => {
-      total += count;
-    });
-    setGrandTotal(total);
+    const grandTotal = Object.keys(countBySubdivision).reduce(
+      (acc, key) => acc + countBySubdivision[key].total,
+      0
+    );
+    setGrandTotal(grandTotal);
   }, [countBySubdivision]);
 
   const tableRows = Object.entries(countBySubdivision).map(
-    ([subdivision, { sold = 0, buy = 0, both = 0, total = 0 }]) => (
+    ([subdivision, { sold, buy, both, total }]) => (
       <tr key={subdivision} className="even:bg-reportGreen odd:bg-white">
-        <td className="border-r border-r-slate-300">{subdivision}</td>
-        <td className="border-r border-r-slate-300 text-center">{sold}</td>
-        <td className="border-r border-r-slate-300 text-center">{buy}</td>
-        <td className="border-r border-r-slate-300 text-center">{both}</td>
+        <td className="border-r border-gray-300">{subdivision}</td>
+        <td className="border-r border-gray-300 text-center">{sold}</td>
+        <td className="border-r border-gray-300 text-center">{buy}</td>
+        <td className="border-r border-gray-300 text-center">{both}</td>
         <td className="text-center">{total}</td>
       </tr>
     )
@@ -57,7 +57,8 @@ export default function TotalReportList({ data }) {
   return (
     <>
       <h2 className="text-3xl text-titleGreen">
-        <CloseDateYearChecker data={data} /> Community Sales Report (
+        <CloseDateYearChecker data={data} />{' '}
+        <span className="text-titleBlue">Community Sales</span> Report (
         {grandTotal})
       </h2>
       <table className="mb-4 mt-8 w-full max-w-screen-xl" cellPadding={6}>

@@ -6,24 +6,54 @@ export default function BuyerReportList({ data }) {
     (item) => item['Buyer Agent Mls Id'] === 'CCHANJE1'
   );
 
-  const listItems = filteredData?.map((item) => {
+  const processedData = filteredData?.map((item) => {
     const closePrice = parseFloat(item['Close Price'].replace(/[^\d.-]/g, ''));
     const listPrice = parseFloat(item['List Price'].replace(/[^\d.-]/g, ''));
     const percentage = ((closePrice / listPrice) * 100).toFixed(1) + '%';
 
+    return {
+      id: item.ID,
+      address: item.Address,
+      listPrice: listPrice,
+      closePrice: closePrice,
+      percentage: percentage || 0,
+      dom: item.DOM,
+    };
+  });
+
+  processedData.sort((a, b) => {
+    // Sort by percentage, descending
+    const percentageDiff = parseFloat(b.percentage) - parseFloat(a.percentage);
+    if (percentageDiff !== 0) {
+      return percentageDiff;
+    }
+
+    // If percentage is the same, sort by DOM, ascending
+    return parseFloat(a.dom) - parseFloat(b.dom);
+  });
+
+  const listItems = processedData?.map((item) => {
     return (
-      <tr key={item.ID} className="even:bg-reportGreen odd:bg-white">
-        <td className="border-r border-r-slate-300">{item.Address}</td>
+      <tr key={item.id} className="even:bg-reportGreen odd:bg-white">
+        <td className="border-r border-r-slate-300">{item.address}</td>
         <td className="border-r border-r-slate-300 text-center">
-          {item['List Price']}
+          {item.listPrice.toLocaleString('en-US', {
+            style: 'currency',
+            currency: 'USD',
+            minimumFractionDigits: 0,
+          })}
         </td>
         <td className="border-r border-r-slate-300 text-center">
-          {item['Close Price']}
+          {item.closePrice.toLocaleString('en-US', {
+            style: 'currency',
+            currency: 'USD',
+            minimumFractionDigits: 0,
+          })}
         </td>
         <td className="border-r border-r-slate-300 text-center">
-          {percentage || 0}
+          {item.percentage}
         </td>
-        <td className="text-center">{item.DOM}</td>
+        <td className="text-center">{item.dom}</td>
       </tr>
     );
   });
